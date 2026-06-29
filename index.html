@@ -167,7 +167,7 @@
 
     async function init() {
         try {
-            const response = await fetch('faq-data.json');
+            const response = await fetch('/faq-assistant/faq-data.json');
             faqDatabase = await response.json();
 
             statusDiv.innerText = "⚡ Initializing WebGPU hardware acceleration...";
