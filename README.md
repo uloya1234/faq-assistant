@@ -1,2 +1,2 @@
 # faq-assistant
-A lightweight, local AI FAQ Assistant running entirely in the browser via WebGPU and Transformers.js for our bootcamp site.
+A lightweight, local AI FAQ Assistant running entirely in the browser via WebGPU and Transformers.js for our bootcamp site; TotorHub, a tutoring busisness (thetutorhub.org).
