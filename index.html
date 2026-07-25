@@ -67,6 +67,7 @@
             overflow: hidden;
         }
 
+        /* ── Sidebar ─────────────────────────── */
         .sidebar {
             width: 280px;
             min-width: 280px;
@@ -101,6 +102,12 @@
             color: #fff;
             flex-shrink: 0;
             box-shadow: 0 2px 12px var(--accent-glow);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .sidebar-logo:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 18px var(--accent-glow-strong);
         }
 
         .sidebar-title {
@@ -116,6 +123,42 @@
             font-weight: 500;
             letter-spacing: 0.02em;
             text-transform: uppercase;
+        }
+
+        .sidebar-search {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            position: relative;
+        }
+        .sidebar-search input {
+            width: 100%;
+            padding: 10px 14px 10px 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            font-size: 12.5px;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: all var(--transition-fast);
+            letter-spacing: -0.005em;
+        }
+        .sidebar-search input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .sidebar-search input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .search-icon {
+            position: absolute;
+            left: 26px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 14px;
+            pointer-events: none;
         }
 
         .sidebar-chats {
@@ -238,6 +281,7 @@
             transition: transform 0.1s ease;
         }
 
+        /* ── Main Area ───────────────────────── */
         .main-area {
             flex: 1;
             display: flex;
@@ -589,6 +633,7 @@
             letter-spacing: 0.02em;
         }
 
+        /* ── Loading Overlay ────────────────── */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -639,6 +684,7 @@
             transition: width 0.3s ease;
         }
 
+        /* ── Toast ──────────────────────────── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -660,6 +706,103 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* ── About Modal ────────────────────── */
+        .about-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 150;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .about-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .about-modal {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 32px 28px 28px;
+            max-width: 360px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg), 0 0 40px var(--accent-glow);
+            transform: translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .about-modal-overlay.active .about-modal {
+            transform: translateY(0);
+        }
+        .about-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #fff;
+            margin: 0 auto 20px;
+            box-shadow: 0 6px 24px var(--accent-glow-strong);
+        }
+        .about-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .about-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-full);
+            background: var(--bg-hover);
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-fast);
+            margin-bottom: 18px;
+        }
+        .about-link:hover {
+            background: var(--border-color);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+        .about-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+        .about-close {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+        .about-close:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        /* ── Responsive ─────────────────────── */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -721,13 +864,18 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- ── Sidebar ─────────────────────── -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">✦</div>
+                <div class="sidebar-logo" id="sidebarLogo" title="About this assistant">✦</div>
                 <div>
                     <div class="sidebar-title">Local AI</div>
                     <div class="sidebar-subtitle">WebGPU Powered</div>
                 </div>
+            </div>
+            <div class="sidebar-search">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="chatSearchInput" placeholder="Search chats..." autocomplete="off">
             </div>
             <div class="sidebar-chats" id="chatHistoryList">
                 <div class="chat-history-item active" data-chat-id="0">
@@ -745,6 +893,7 @@
             </div>
         </aside>
 
+        <!-- ── Main Area ──────────────────── -->
         <div class="main-area">
             <div class="top-bar">
                 <div class="top-bar-left">
@@ -768,7 +917,6 @@
                             <button class="suggested-prompt" data-prompt="Go to the About page">📘 About page</button>
                             <button class="suggested-prompt" data-prompt="Show me the classes">📚 Our classes</button>
                             <button class="suggested-prompt" data-prompt="What is 12*7?">🧮 12 × 7</button>
-                            <button class="suggested-prompt" data-prompt="Calculate square root of 144">√144</button>
                         </div>
                     </div>
                 </div>
@@ -795,6 +943,7 @@
         </div>
     </div>
 
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-text" id="loadingText">Loading AI model…</div>
@@ -803,6 +952,24 @@
         </div>
     </div>
 
+    <!-- About Modal -->
+    <div class="about-modal-overlay" id="aboutModalOverlay">
+        <div class="about-modal">
+            <div class="about-logo">✦</div>
+            <div class="about-text">This model was inspired by<br><strong>Umair Loya</strong></div>
+            <a href="https://thetutorhub.org" target="_blank" class="about-link">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                thetutorhub.org
+            </a>
+            <button class="about-close" id="closeAboutModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script type="importmap">
@@ -822,7 +989,6 @@
         const btnNewChat = document.getElementById('btnNewChat');
         const messagesWrapper = document.getElementById('messagesWrapper');
         const messagesContainer = document.getElementById('messagesContainer');
-        const welcomeState = document.getElementById('welcomeState');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const loadingOverlay = document.getElementById('loadingOverlay');
@@ -832,64 +998,29 @@
         const modelNameDisplay = document.getElementById('modelNameDisplay');
         const backendBadge = document.getElementById('backendBadge');
         const chatHistoryList = document.getElementById('chatHistoryList');
-        const inputContainer = document.getElementById('inputContainer');
+        const sidebarLogo = document.getElementById('sidebarLogo');
+        const aboutModalOverlay = document.getElementById('aboutModalOverlay');
+        const closeAboutModal = document.getElementById('closeAboutModal');
+        const chatSearchInput = document.getElementById('chatSearchInput');
 
         // ── Redirect routes ──────────────────
         const redirectRoutes = [
-            {
-                keywords: ['about', 'about page', 'about us', 'who are you', 'our story'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/about',
-                label: 'About page'
-            },
-            {
-                keywords: ['services', 'classes', 'lessons', 'our lessons', 'our services', 'what do you offer', 'courses'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/our-lessons',
-                label: 'Our Services (Classes)'
-            },
-            {
-                keywords: ['contact', 'contact us', 'get in touch', 'email', 'phone', 'reach out'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/contact-8',
-                label: 'Contact page'
-            },
-            {
-                keywords: ['portfolio', 'work', 'samples', 'previous work', 'gallery'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/portfolio',
-                label: 'Portfolio'
-            },
-            {
-                keywords: ['register', 'sign up', 'registration', 'enroll', 'join', 'google form'],
-                url: 'https://forms.gle/G275bgub7XKzaU2MA',
-                label: 'Registration (Google Form)'
-            },
-            {
-                keywords: ['algebra', 'fundamentals of algebra', 'algebra course', 'algebra class'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/fundamentals-of-algebra?referral=service_list_widget',
-                label: 'Algebra course details'
-            },
-            {
-                keywords: ['cad', 'engineering cad', 'cad course', 'cad class', 'computer-aided design'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/applications-of-engineering-cad?referral=service_list_widget',
-                label: 'Engineering CAD details'
-            },
-            {
-                keywords: ['python', 'computer science', 'comp sci', 'python course', 'intro to computer science'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/intro-to-computer-science-w-python?referral=service_list_widget',
-                label: 'Computer Science with Python details'
-            },
-            {
-                keywords: ['home', 'main page', 'homepage', 'front page'],
-                url: 'https://mcpstutorhub.wixsite.com/tutor-hub',
-                label: 'Main page'
-            }
+            { keywords: ['about', 'about page', 'about us', 'who are you', 'our story'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/about', label: 'About page' },
+            { keywords: ['services', 'classes', 'lessons', 'our lessons', 'our services', 'what do you offer', 'courses'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/our-lessons', label: 'Our Services (Classes)' },
+            { keywords: ['contact', 'contact us', 'get in touch', 'email', 'phone', 'reach out'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/contact-8', label: 'Contact page' },
+            { keywords: ['portfolio', 'work', 'samples', 'previous work', 'gallery'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/portfolio', label: 'Portfolio' },
+            { keywords: ['register', 'sign up', 'registration', 'enroll', 'join', 'google form'], url: 'https://forms.gle/G275bgub7XKzaU2MA', label: 'Registration (Google Form)' },
+            { keywords: ['algebra', 'fundamentals of algebra', 'algebra course', 'algebra class'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/fundamentals-of-algebra?referral=service_list_widget', label: 'Algebra course details' },
+            { keywords: ['cad', 'engineering cad', 'cad course', 'cad class', 'computer-aided design'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/applications-of-engineering-cad?referral=service_list_widget', label: 'Engineering CAD details' },
+            { keywords: ['python', 'computer science', 'comp sci', 'python course', 'intro to computer science'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/intro-to-computer-science-w-python?referral=service_list_widget', label: 'Computer Science with Python details' },
+            { keywords: ['home', 'main page', 'homepage', 'front page'], url: 'https://mcpstutorhub.wixsite.com/tutor-hub', label: 'Main page' }
         ];
 
         function findRedirect(userMessage) {
             const msg = userMessage.toLowerCase().trim();
             for (const route of redirectRoutes) {
                 for (const keyword of route.keywords) {
-                    if (msg.includes(keyword)) {
-                        return route;
-                    }
+                    if (msg.includes(keyword)) return route;
                 }
             }
             return null;
@@ -897,33 +1028,24 @@
 
         // ── Math solver ──────────────────────
         function isMathQuestion(input) {
-            const mathKeywords = [
-                'what is', 'calculate', 'compute', 'solve', 'evaluate',
-                'math', 'what\'s', 'find the value', 'how much is',
-                'what does', 'work out', 'determine'
-            ];
+            const mathKeywords = ['what is', 'calculate', 'compute', 'solve', 'evaluate', 'math', 'what\'s', 'find the value', 'how much is', 'what does', 'work out', 'determine'];
             const lower = input.toLowerCase().trim();
-            // Check for explicit math request or pattern like "2+2"
             const hasMathVerb = mathKeywords.some(kw => lower.startsWith(kw) || lower.includes(` ${kw} `));
             const looksLikeExpression = /^[0-9+\-*/().\s^%√x÷×]+$/.test(lower.replace(/\s/g, ''));
             return hasMathVerb || looksLikeExpression;
         }
 
         function extractExpression(input) {
-            // Remove common question phrasing to isolate the expression
             let expr = input.replace(/what is|what's|calculate|compute|solve|evaluate|find|math|how much is|work out|determine/gi, '');
-            // Remove trailing question marks, punctuation
             expr = expr.replace(/[?.,!]+$/, '').trim();
-            if (!expr) return null;
-            return expr;
+            return expr || null;
         }
 
         function safeEval(expr) {
-            // Sanitize: replace symbols with JS equivalents
             let sanitized = expr
                 .replace(/×/g, '*')
                 .replace(/÷/g, '/')
-                .replace(/x/g, '*')   // often used as multiplication
+                .replace(/x/g, '*')
                 .replace(/\^/g, '**')
                 .replace(/√/g, 'Math.sqrt')
                 .replace(/sqrt/g, 'Math.sqrt')
@@ -933,22 +1055,15 @@
                 .replace(/sin/g, 'Math.sin')
                 .replace(/cos/g, 'Math.cos')
                 .replace(/tan/g, 'Math.tan')
-                .replace(/log/g, 'Math.log10') // common log
+                .replace(/log/g, 'Math.log10')
                 .replace(/ln/g, 'Math.log')
-                .replace(/(\d+)%/g, '($1/100)'); // percentages
-
-            // Remove any characters that are not allowed (only keep digits, operators, dots, parens, Math., spaces)
+                .replace(/(\d+)%/g, '($1/100)');
             const allowed = /[^0-9+\-*/().%\sMath.sqrtpiabscostanlg]+/g;
             sanitized = sanitized.replace(allowed, '');
-
             if (!sanitized) return null;
-
             try {
-                // Use Function constructor for safer evaluation than eval
                 const result = new Function(`return ${sanitized}`)();
-                if (typeof result === 'number' && !isNaN(result) && isFinite(result)) {
-                    return result;
-                }
+                if (typeof result === 'number' && !isNaN(result) && isFinite(result)) return result;
                 return null;
             } catch (e) {
                 return null;
@@ -957,14 +1072,10 @@
 
         function handleMathQuestion(userMessage) {
             if (!isMathQuestion(userMessage)) return null;
-
             const expr = extractExpression(userMessage);
             if (!expr) return null;
-
             const result = safeEval(expr);
             if (result === null) return null;
-
-            // Format the answer nicely
             const formattedResult = Number.isInteger(result) ? result.toString() : result.toFixed(4).replace(/\.?0+$/, '');
             return `🧮 **${expr.replace(/\*/g, '×').replace(/\//g, '÷')}** = **${formattedResult}**`;
         }
@@ -974,9 +1085,7 @@
         let generator = null;
         let isGenerating = false;
         let currentChatId = 0;
-        let chatHistories = {
-            0: { title: 'New Conversation', messages: [] },
-        };
+        let chatHistories = { 0: { title: 'New Conversation', messages: [] } };
         let totalChats = 1;
 
         async function checkWebGPU() {
@@ -984,9 +1093,7 @@
                 try {
                     const adapter = await navigator.gpu.requestAdapter();
                     if (adapter) return true;
-                } catch (e) {
-                    console.log('WebGPU adapter request failed:', e);
-                }
+                } catch (e) { console.log('WebGPU adapter request failed:', e); }
             }
             return false;
         }
@@ -996,42 +1103,32 @@
             clearTimeout(toastTimeout);
             toast.textContent = message;
             toast.classList.add('show');
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
+            toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, duration);
         }
 
         function scrollToBottom() {
-            requestAnimationFrame(() => {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
+            requestAnimationFrame(() => { messagesContainer.scrollTop = messagesContainer.scrollHeight; });
         }
 
         function renderAllMessages() {
             const chat = chatHistories[currentChatId];
             messagesWrapper.innerHTML = '';
-
             if (!chat || chat.messages.length === 0) {
                 messagesWrapper.innerHTML = `
                     <div class="welcome-state" id="welcomeState">
                         <div class="welcome-icon">✦</div>
                         <div class="welcome-title">Hello, how can I help?</div>
-                        <div class="welcome-subtitle">
-                            I can answer questions, navigate to Tutor Hub pages, or solve basic math problems.
-                        </div>
+                        <div class="welcome-subtitle">I can answer questions, navigate to Tutor Hub pages, or solve basic math problems.</div>
                         <div class="suggested-prompts">
                             <button class="suggested-prompt" data-prompt="Go to the About page">📘 About page</button>
                             <button class="suggested-prompt" data-prompt="Show me the classes">📚 Our classes</button>
                             <button class="suggested-prompt" data-prompt="What is 12*7?">🧮 12 × 7</button>
-                            <button class="suggested-prompt" data-prompt="Calculate square root of 144">√144</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 bindSuggestedPrompts();
             } else {
                 chat.messages.forEach((msg, index) => {
-                    const msgEl = createMessageElement(msg, index === chat.messages.length - 1 && msg.role ===
-                        'assistant');
+                    const msgEl = createMessageElement(msg, index === chat.messages.length - 1 && msg.role === 'assistant');
                     messagesWrapper.appendChild(msgEl);
                 });
             }
@@ -1044,22 +1141,18 @@
             const avatarContent = msg.role === 'user' ? 'U' : '✦';
             div.innerHTML = `
                 <div class="message-avatar">${avatarContent}</div>
-                <div class="message-content">${formatMessageContent(msg.content)}${isLastAssistant && isGenerating ? '<span class="typing-cursor"></span>' : ''}</div>
-            `;
+                <div class="message-content">${formatMessageContent(msg.content)}${isLastAssistant && isGenerating ? '<span class="typing-cursor"></span>' : ''}</div>`;
             return div;
         }
 
         function formatMessageContent(content) {
             let formatted = content
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/`([^`]+)`/g, '<code>$1</code>')
                 .replace(/\n/g, '<br>');
-            formatted = formatted.replace(/```(\w*)\n?([\s\S]*?)```/g,
-                '<pre><code>$2</code></pre>');
+            formatted = formatted.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
             return formatted;
         }
 
@@ -1067,17 +1160,12 @@
             const chat = chatHistories[currentChatId];
             if (!chat || chat.messages.length === 0) return;
             const lastMsg = chat.messages[chat.messages.length - 1];
-            if (lastMsg.role === 'assistant') {
-                lastMsg.content = content;
-            }
+            if (lastMsg.role === 'assistant') lastMsg.content = content;
             const allAssistantMessages = messagesWrapper.querySelectorAll('.message.assistant');
             if (allAssistantMessages.length > 0) {
                 const lastEl = allAssistantMessages[allAssistantMessages.length - 1];
                 const contentEl = lastEl.querySelector('.message-content');
-                if (contentEl) {
-                    contentEl.innerHTML = formatMessageContent(content) +
-                        (isGenerating ? '<span class="typing-cursor"></span>' : '');
-                }
+                if (contentEl) contentEl.innerHTML = formatMessageContent(content) + (isGenerating ? '<span class="typing-cursor"></span>' : '');
             }
             scrollToBottom();
         }
@@ -1088,8 +1176,7 @@
         }
 
         function bindSuggestedPrompts() {
-            const buttons = messagesWrapper.querySelectorAll('.suggested-prompt');
-            buttons.forEach(btn => {
+            document.querySelectorAll('.suggested-prompt').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const prompt = btn.dataset.prompt;
                     if (prompt && !isGenerating) {
@@ -1100,9 +1187,12 @@
             });
         }
 
-        function updateChatHistoryUI() {
+        // ── Chat history UI with search ──────
+        function updateChatHistoryUI(filterText = '') {
             chatHistoryList.innerHTML = '';
+            const searchLower = filterText.trim().toLowerCase();
             for (const [id, chat] of Object.entries(chatHistories)) {
+                if (searchLower && !chat.title.toLowerCase().includes(searchLower)) continue;
                 const item = document.createElement('div');
                 item.className = `chat-history-item${parseInt(id) === currentChatId ? ' active' : ''}`;
                 item.dataset.chatId = id;
@@ -1112,21 +1202,21 @@
             }
         }
 
+        chatSearchInput.addEventListener('input', (e) => {
+            updateChatHistoryUI(e.target.value);
+        });
+
         function switchChat(chatId) {
             if (isGenerating) {
                 showToast('Please wait for the current response to finish');
                 return;
             }
-            if (!chatHistories[chatId]) {
-                chatHistories[chatId] = { title: 'New Conversation', messages: [] };
-            }
+            if (!chatHistories[chatId]) chatHistories[chatId] = { title: 'New Conversation', messages: [] };
             currentChatId = chatId;
-            updateChatHistoryUI();
+            updateChatHistoryUI(chatSearchInput.value);
             renderAllMessages();
             userInput.focus();
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('open');
-            }
+            if (window.innerWidth <= 768) sidebar.classList.remove('open');
         }
 
         function escapeHTML(str) {
@@ -1135,6 +1225,20 @@
             return div.innerHTML;
         }
 
+        // ── About Modal ──────────────────────
+        sidebarLogo.addEventListener('click', () => {
+            aboutModalOverlay.classList.add('active');
+        });
+
+        closeAboutModal.addEventListener('click', () => {
+            aboutModalOverlay.classList.remove('active');
+        });
+
+        aboutModalOverlay.addEventListener('click', (e) => {
+            if (e.target === aboutModalOverlay) aboutModalOverlay.classList.remove('active');
+        });
+
+        // ── Model Loading ────────────────────
         async function loadModel() {
             const hasWebGPU = await checkWebGPU();
             env.useBrowserCache = false;
@@ -1144,13 +1248,11 @@
                 env.allowLocalModels = false;
                 backendBadge.textContent = '⚡ WebGPU';
                 backendBadge.style.color = '#22c55e';
-                console.log('✅ WebGPU is available!');
             } else {
                 env.backends.onnx.wasm.numThreads = Math.max(1, navigator.hardwareConcurrency - 1);
                 env.allowLocalModels = false;
                 backendBadge.textContent = '💻 WASM (CPU)';
                 backendBadge.style.color = '#f59e0b';
-                console.log('⚠️ WebGPU not available, falling back to WASM CPU');
             }
 
             loadingText.textContent = 'Downloading AI model…';
@@ -1160,12 +1262,10 @@
                 generator = await pipeline('text-generation', MODEL_NAME, {
                     device: hasWebGPU ? 'webgpu' : 'wasm',
                     progress_callback: (progress) => {
-                        if (progress && progress.progress !== undefined) {
+                        if (progress?.progress !== undefined) {
                             const pct = Math.round(progress.progress);
                             loadingProgressBar.style.width = Math.min(95, 5 + pct * 0.9) + '%';
-                            if (progress.file) {
-                                loadingText.textContent = `Loading: ${progress.file}`;
-                            }
+                            if (progress.file) loadingText.textContent = `Loading: ${progress.file}`;
                         }
                     },
                 });
@@ -1173,12 +1273,7 @@
                 loadingProgressBar.style.width = '100%';
                 loadingText.textContent = 'Model ready!';
                 modelNameDisplay.textContent = MODEL_NAME.split('/').pop();
-
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
-                }, 600);
-
-                console.log('✅ Model loaded successfully!');
+                setTimeout(() => loadingOverlay.classList.add('hidden'), 600);
                 showToast('AI model loaded · Ready to chat');
             } catch (error) {
                 console.error('Failed to load model:', error);
@@ -1191,7 +1286,6 @@
 
         async function handleSend() {
             if (isGenerating || !generator) return;
-
             const text = userInput.value.trim();
             if (!text) return;
 
@@ -1203,49 +1297,35 @@
 
             if (chat.messages.length === 1 && chat.title === 'New Conversation') {
                 chat.title = text.slice(0, 50) + (text.length > 50 ? '…' : '');
-                updateChatHistoryUI();
+                updateChatHistoryUI(chatSearchInput.value);
             }
 
-            // ── 1. Check redirect ───────────────
             const redirect = findRedirect(text);
             if (redirect) {
-                const responseMsg = `🔗 Opening the **${redirect.label}** for you in a new tab.`;
-                chat.messages.push({ role: 'assistant', content: responseMsg });
+                chat.messages.push({ role: 'assistant', content: `🔗 Opening the **${redirect.label}** for you in a new tab.` });
                 renderAllMessages();
                 window.open(redirect.url, '_blank');
-                userInput.value = '';
-                userInput.style.height = 'auto';
-                sendBtn.disabled = true;
-                updateChatHistoryUI();
-                userInput.focus();
+                resetInput();
+                updateChatHistoryUI(chatSearchInput.value);
                 return;
             }
 
-            // ── 2. Check math question ──────────
             const mathAnswer = handleMathQuestion(text);
             if (mathAnswer) {
                 chat.messages.push({ role: 'assistant', content: mathAnswer });
                 renderAllMessages();
-                userInput.value = '';
-                userInput.style.height = 'auto';
-                sendBtn.disabled = true;
-                updateChatHistoryUI();
-                userInput.focus();
+                resetInput();
+                updateChatHistoryUI(chatSearchInput.value);
                 return;
             }
 
-            // ── 3. Normal AI generation ─────────
             renderAllMessages();
-            userInput.value = '';
-            userInput.style.height = 'auto';
-            sendBtn.disabled = true;
+            resetInput();
             isGenerating = true;
-
             chat.messages.push({ role: 'assistant', content: '' });
             renderAllMessages();
 
             const prompt = buildPrompt(chat.messages);
-
             try {
                 let fullResponse = '';
                 const result = await generator(prompt, {
@@ -1256,16 +1336,9 @@
                     repetition_penalty: 1.1,
                     do_sample: true,
                     callback_function: (outputs) => {
-                        const generatedText = generator.tokenizer.decode(outputs[0].output_token_ids, {
-                            skip_special_tokens: true,
-                        });
-                        const promptDecoded = generator.tokenizer.decode(
-                            generator.tokenizer.encode(prompt), { skip_special_tokens: true }
-                        );
-                        let newText = generatedText;
-                        if (generatedText.startsWith(promptDecoded)) {
-                            newText = generatedText.slice(promptDecoded.length);
-                        }
+                        const generatedText = generator.tokenizer.decode(outputs[0].output_token_ids, { skip_special_tokens: true });
+                        const promptDecoded = generator.tokenizer.decode(generator.tokenizer.encode(prompt), { skip_special_tokens: true });
+                        let newText = generatedText.startsWith(promptDecoded) ? generatedText.slice(promptDecoded.length) : generatedText;
                         newText = cleanResponse(newText);
                         if (newText !== fullResponse) {
                             fullResponse = newText;
@@ -1277,43 +1350,37 @@
                 let finalText = '';
                 if (Array.isArray(result) && result.length > 0) {
                     const generatedText = result[0].generated_text || '';
-                    const promptDecoded = generator.tokenizer.decode(
-                        generator.tokenizer.encode(prompt), { skip_special_tokens: true }
-                    );
-                    finalText = generatedText;
-                    if (generatedText.startsWith(promptDecoded)) {
-                        finalText = generatedText.slice(promptDecoded.length);
-                    }
+                    const promptDecoded = generator.tokenizer.decode(generator.tokenizer.encode(prompt), { skip_special_tokens: true });
+                    finalText = generatedText.startsWith(promptDecoded) ? generatedText.slice(promptDecoded.length) : generatedText;
                 } else if (typeof result === 'string') {
                     finalText = result;
                 }
                 finalText = cleanResponse(finalText);
-
-                chat.messages[chat.messages.length - 1].content = finalText || fullResponse ||
-                    '(Generated empty response — try again)';
+                chat.messages[chat.messages.length - 1].content = finalText || fullResponse || '(Generated empty response — try again)';
             } catch (error) {
                 console.error('Generation error:', error);
-                chat.messages[chat.messages.length - 1].content =
-                    'Sorry, an error occurred during generation. Please try again.';
-                showToast('Generation error. Please try again.');
+                chat.messages[chat.messages.length - 1].content = 'Sorry, an error occurred during generation. Please try again.';
             }
 
             isGenerating = false;
             removeTypingCursor();
             renderAllMessages();
-            updateChatHistoryUI();
+            updateChatHistoryUI(chatSearchInput.value);
             userInput.focus();
+        }
+
+        function resetInput() {
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            sendBtn.disabled = true;
         }
 
         function buildPrompt(messages) {
             const conversationMessages = messages.slice(0, -1);
             let prompt = '';
             for (const msg of conversationMessages) {
-                if (msg.role === 'user') {
-                    prompt += `User: ${msg.content}\n`;
-                } else if (msg.role === 'assistant' && msg.content) {
-                    prompt += `Assistant: ${msg.content}\n`;
-                }
+                if (msg.role === 'user') prompt += `User: ${msg.content}\n`;
+                else if (msg.role === 'assistant' && msg.content) prompt += `Assistant: ${msg.content}\n`;
             }
             prompt += 'Assistant:';
             return prompt;
@@ -1321,58 +1388,39 @@
 
         function cleanResponse(text) {
             let cleaned = text.replace(/User:.*$/s, '').trim();
-            cleaned = cleaned.replace(/\n\s*$/, '');
-            return cleaned;
+            return cleaned.replace(/\n\s*$/, '');
         }
 
+        // ── Event Listeners ──────────────────
         sendBtn.addEventListener('click', handleSend);
-
         userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                if (!isGenerating && userInput.value.trim()) {
-                    handleSend();
-                }
+                if (!isGenerating && userInput.value.trim()) handleSend();
             }
         });
-
         userInput.addEventListener('input', () => {
             userInput.style.height = 'auto';
             userInput.style.height = Math.min(userInput.scrollHeight, 160) + 'px';
             sendBtn.disabled = !userInput.value.trim() || isGenerating;
         });
-
-        menuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
-
+        menuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
         btnNewChat.addEventListener('click', () => {
-            if (isGenerating) {
-                showToast('Please wait for the current response to finish');
-                return;
-            }
+            if (isGenerating) { showToast('Please wait for the current response to finish'); return; }
             totalChats++;
             const newId = totalChats;
             chatHistories[newId] = { title: 'New Conversation', messages: [] };
             currentChatId = newId;
-            updateChatHistoryUI();
+            updateChatHistoryUI(chatSearchInput.value);
             renderAllMessages();
             userInput.focus();
-            if (window.innerWidth <= 768) {
-                sidebar.classList.remove('open');
-            }
+            if (window.innerWidth <= 768) sidebar.classList.remove('open');
         });
-
         document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 &&
-                !sidebar.contains(e.target) &&
-                e.target !== menuBtn &&
-                !menuBtn.contains(e.target) &&
-                sidebar.classList.contains('open')) {
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && e.target !== menuBtn && !menuBtn.contains(e.target) && sidebar.classList.contains('open')) {
                 sidebar.classList.remove('open');
             }
         });
-
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
@@ -1385,16 +1433,11 @@
             renderAllMessages();
             userInput.focus();
             await loadModel();
-            setTimeout(() => {
-                userInput.focus();
-            }, 800);
+            setTimeout(() => userInput.focus(), 800);
         }
 
         init().catch(console.error);
-
-        console.log('🚀 Local AI Chat initialized (redirects + math solver)');
-        console.log('   Model:', MODEL_NAME);
-        console.log('   Press Ctrl+K for new chat');
+        console.log('🚀 Local AI Chat initialized (redirects + math + search + about modal)');
     </script>
 </body>
 </html>
