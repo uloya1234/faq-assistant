@@ -59,7 +59,6 @@
             -webkit-user-select: none;
         }
 
-        /* ── Layout ─────────────────────────── */
         .app-container {
             display: flex;
             height: 100vh;
@@ -68,7 +67,6 @@
             overflow: hidden;
         }
 
-        /* ── Sidebar ───────────────────────── */
         .sidebar {
             width: 280px;
             min-width: 280px;
@@ -240,7 +238,6 @@
             transition: transform 0.1s ease;
         }
 
-        /* ── Main Chat Area ────────────────── */
         .main-area {
             flex: 1;
             display: flex;
@@ -326,7 +323,6 @@
             gap: 6px;
         }
 
-        /* ── Welcome State ─────────────────── */
         .welcome-state {
             display: flex;
             flex-direction: column;
@@ -396,7 +392,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* ── Message Bubbles ──────────────── */
         .message {
             display: flex;
             gap: 14px;
@@ -499,7 +494,6 @@
             }
         }
 
-        /* ── Input Area ───────────────────── */
         .input-area {
             padding: 14px 20px 20px;
             flex-shrink: 0;
@@ -595,7 +589,6 @@
             letter-spacing: 0.02em;
         }
 
-        /* ── Loading overlay ──────────────── */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -646,7 +639,6 @@
             transition: width 0.3s ease;
         }
 
-        /* ── Toast ────────────────────────── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -668,7 +660,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ── Responsive ──────────────────── */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -730,7 +721,6 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- ── Sidebar ─────────────────────── -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">✦</div>
@@ -755,7 +745,6 @@
             </div>
         </aside>
 
-        <!-- ── Main Area ──────────────────── -->
         <div class="main-area">
             <div class="top-bar">
                 <div class="top-bar-left">
@@ -769,19 +758,17 @@
 
             <div class="messages-container" id="messagesContainer">
                 <div class="messages-wrapper" id="messagesWrapper">
-                    <!-- Welcome state -->
                     <div class="welcome-state" id="welcomeState">
                         <div class="welcome-icon">✦</div>
                         <div class="welcome-title">Hello, how can I help?</div>
                         <div class="welcome-subtitle">
-                            I'm running entirely on your device with WebGPU acceleration.
-                            Your conversations stay private and never leave this browser.
+                            I can answer questions, navigate to Tutor Hub pages, or solve basic math problems.
                         </div>
                         <div class="suggested-prompts">
-                            <button class="suggested-prompt" data-prompt="Write a short poem about technology">📝 Write a poem</button>
-                            <button class="suggested-prompt" data-prompt="Explain quantum computing in simple terms">🔬 Explain quantum computing</button>
-                            <button class="suggested-prompt" data-prompt="Give me 3 creative startup ideas">💡 Startup ideas</button>
-                            <button class="suggested-prompt" data-prompt="Tell me a fun fact about space">🚀 Space fun fact</button>
+                            <button class="suggested-prompt" data-prompt="Go to the About page">📘 About page</button>
+                            <button class="suggested-prompt" data-prompt="Show me the classes">📚 Our classes</button>
+                            <button class="suggested-prompt" data-prompt="What is 12*7?">🧮 12 × 7</button>
+                            <button class="suggested-prompt" data-prompt="Calculate square root of 144">√144</button>
                         </div>
                     </div>
                 </div>
@@ -793,7 +780,7 @@
                         <textarea
                         id="userInput"
                         rows="1"
-                        placeholder="Type your message…"
+                        placeholder="Ask me anything, request a page, or type a math problem…"
                         maxlength="2000"
                     ></textarea>
                     <button class="send-btn" id="sendBtn" disabled aria-label="Send message">
@@ -803,12 +790,11 @@
                         </svg>
                     </button>
                 </div>
-                <div class="input-footer">Local AI · Responses are generated on-device · WebGPU accelerated</div>
+                <div class="input-footer">Local AI · Redirects · Math solver · WebGPU accelerated</div>
             </div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-text" id="loadingText">Loading AI model…</div>
@@ -817,7 +803,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script type="importmap">
@@ -849,11 +834,143 @@
         const chatHistoryList = document.getElementById('chatHistoryList');
         const inputContainer = document.getElementById('inputContainer');
 
+        // ── Redirect routes ──────────────────
+        const redirectRoutes = [
+            {
+                keywords: ['about', 'about page', 'about us', 'who are you', 'our story'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/about',
+                label: 'About page'
+            },
+            {
+                keywords: ['services', 'classes', 'lessons', 'our lessons', 'our services', 'what do you offer', 'courses'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/our-lessons',
+                label: 'Our Services (Classes)'
+            },
+            {
+                keywords: ['contact', 'contact us', 'get in touch', 'email', 'phone', 'reach out'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/contact-8',
+                label: 'Contact page'
+            },
+            {
+                keywords: ['portfolio', 'work', 'samples', 'previous work', 'gallery'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/portfolio',
+                label: 'Portfolio'
+            },
+            {
+                keywords: ['register', 'sign up', 'registration', 'enroll', 'join', 'google form'],
+                url: 'https://forms.gle/G275bgub7XKzaU2MA',
+                label: 'Registration (Google Form)'
+            },
+            {
+                keywords: ['algebra', 'fundamentals of algebra', 'algebra course', 'algebra class'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/fundamentals-of-algebra?referral=service_list_widget',
+                label: 'Algebra course details'
+            },
+            {
+                keywords: ['cad', 'engineering cad', 'cad course', 'cad class', 'computer-aided design'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/applications-of-engineering-cad?referral=service_list_widget',
+                label: 'Engineering CAD details'
+            },
+            {
+                keywords: ['python', 'computer science', 'comp sci', 'python course', 'intro to computer science'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub/service-page/intro-to-computer-science-w-python?referral=service_list_widget',
+                label: 'Computer Science with Python details'
+            },
+            {
+                keywords: ['home', 'main page', 'homepage', 'front page'],
+                url: 'https://mcpstutorhub.wixsite.com/tutor-hub',
+                label: 'Main page'
+            }
+        ];
+
+        function findRedirect(userMessage) {
+            const msg = userMessage.toLowerCase().trim();
+            for (const route of redirectRoutes) {
+                for (const keyword of route.keywords) {
+                    if (msg.includes(keyword)) {
+                        return route;
+                    }
+                }
+            }
+            return null;
+        }
+
+        // ── Math solver ──────────────────────
+        function isMathQuestion(input) {
+            const mathKeywords = [
+                'what is', 'calculate', 'compute', 'solve', 'evaluate',
+                'math', 'what\'s', 'find the value', 'how much is',
+                'what does', 'work out', 'determine'
+            ];
+            const lower = input.toLowerCase().trim();
+            // Check for explicit math request or pattern like "2+2"
+            const hasMathVerb = mathKeywords.some(kw => lower.startsWith(kw) || lower.includes(` ${kw} `));
+            const looksLikeExpression = /^[0-9+\-*/().\s^%√x÷×]+$/.test(lower.replace(/\s/g, ''));
+            return hasMathVerb || looksLikeExpression;
+        }
+
+        function extractExpression(input) {
+            // Remove common question phrasing to isolate the expression
+            let expr = input.replace(/what is|what's|calculate|compute|solve|evaluate|find|math|how much is|work out|determine/gi, '');
+            // Remove trailing question marks, punctuation
+            expr = expr.replace(/[?.,!]+$/, '').trim();
+            if (!expr) return null;
+            return expr;
+        }
+
+        function safeEval(expr) {
+            // Sanitize: replace symbols with JS equivalents
+            let sanitized = expr
+                .replace(/×/g, '*')
+                .replace(/÷/g, '/')
+                .replace(/x/g, '*')   // often used as multiplication
+                .replace(/\^/g, '**')
+                .replace(/√/g, 'Math.sqrt')
+                .replace(/sqrt/g, 'Math.sqrt')
+                .replace(/π/g, 'Math.PI')
+                .replace(/pi/g, 'Math.PI')
+                .replace(/abs/g, 'Math.abs')
+                .replace(/sin/g, 'Math.sin')
+                .replace(/cos/g, 'Math.cos')
+                .replace(/tan/g, 'Math.tan')
+                .replace(/log/g, 'Math.log10') // common log
+                .replace(/ln/g, 'Math.log')
+                .replace(/(\d+)%/g, '($1/100)'); // percentages
+
+            // Remove any characters that are not allowed (only keep digits, operators, dots, parens, Math., spaces)
+            const allowed = /[^0-9+\-*/().%\sMath.sqrtpiabscostanlg]+/g;
+            sanitized = sanitized.replace(allowed, '');
+
+            if (!sanitized) return null;
+
+            try {
+                // Use Function constructor for safer evaluation than eval
+                const result = new Function(`return ${sanitized}`)();
+                if (typeof result === 'number' && !isNaN(result) && isFinite(result)) {
+                    return result;
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function handleMathQuestion(userMessage) {
+            if (!isMathQuestion(userMessage)) return null;
+
+            const expr = extractExpression(userMessage);
+            if (!expr) return null;
+
+            const result = safeEval(expr);
+            if (result === null) return null;
+
+            // Format the answer nicely
+            const formattedResult = Number.isInteger(result) ? result.toString() : result.toFixed(4).replace(/\.?0+$/, '');
+            return `🧮 **${expr.replace(/\*/g, '×').replace(/\//g, '÷')}** = **${formattedResult}**`;
+        }
+
         // ── State ────────────────────────────
         const MODEL_NAME = 'Xenova/distilgpt2';
-        // Alternative smaller/faster model for testing:
-        // const MODEL_NAME = 'Xenova/TinyStories-1M';
-
         let generator = null;
         let isGenerating = false;
         let currentChatId = 0;
@@ -862,14 +979,11 @@
         };
         let totalChats = 1;
 
-        // ── WebGPU Detection ─────────────────
         async function checkWebGPU() {
             if (typeof navigator.gpu !== 'undefined' && navigator.gpu) {
                 try {
                     const adapter = await navigator.gpu.requestAdapter();
-                    if (adapter) {
-                        return true;
-                    }
+                    if (adapter) return true;
                 } catch (e) {
                     console.log('WebGPU adapter request failed:', e);
                 }
@@ -877,7 +991,6 @@
             return false;
         }
 
-        // ── Toast ────────────────────────────
         let toastTimeout;
         function showToast(message, duration = 2500) {
             clearTimeout(toastTimeout);
@@ -888,33 +1001,29 @@
             }, duration);
         }
 
-        // ── Scrolling ────────────────────────
         function scrollToBottom() {
             requestAnimationFrame(() => {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
         }
 
-        // ── Render Messages ──────────────────
         function renderAllMessages() {
             const chat = chatHistories[currentChatId];
             messagesWrapper.innerHTML = '';
 
             if (!chat || chat.messages.length === 0) {
-                // Show welcome state
                 messagesWrapper.innerHTML = `
                     <div class="welcome-state" id="welcomeState">
                         <div class="welcome-icon">✦</div>
                         <div class="welcome-title">Hello, how can I help?</div>
                         <div class="welcome-subtitle">
-                            I'm running entirely on your device with WebGPU acceleration.
-                            Your conversations stay private and never leave this browser.
+                            I can answer questions, navigate to Tutor Hub pages, or solve basic math problems.
                         </div>
                         <div class="suggested-prompts">
-                            <button class="suggested-prompt" data-prompt="Write a short poem about technology">📝 Write a poem</button>
-                            <button class="suggested-prompt" data-prompt="Explain quantum computing in simple terms">🔬 Explain quantum computing</button>
-                            <button class="suggested-prompt" data-prompt="Give me 3 creative startup ideas">💡 Startup ideas</button>
-                            <button class="suggested-prompt" data-prompt="Tell me a fun fact about space">🚀 Space fun fact</button>
+                            <button class="suggested-prompt" data-prompt="Go to the About page">📘 About page</button>
+                            <button class="suggested-prompt" data-prompt="Show me the classes">📚 Our classes</button>
+                            <button class="suggested-prompt" data-prompt="What is 12*7?">🧮 12 × 7</button>
+                            <button class="suggested-prompt" data-prompt="Calculate square root of 144">√144</button>
                         </div>
                     </div>
                 `;
@@ -941,7 +1050,6 @@
         }
 
         function formatMessageContent(content) {
-            // Simple markdown-like formatting
             let formatted = content
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -950,11 +1058,8 @@
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/`([^`]+)`/g, '<code>$1</code>')
                 .replace(/\n/g, '<br>');
-
-            // Handle code blocks
             formatted = formatted.replace(/```(\w*)\n?([\s\S]*?)```/g,
                 '<pre><code>$2</code></pre>');
-
             return formatted;
         }
 
@@ -965,7 +1070,6 @@
             if (lastMsg.role === 'assistant') {
                 lastMsg.content = content;
             }
-            // Update DOM efficiently
             const allAssistantMessages = messagesWrapper.querySelectorAll('.message.assistant');
             if (allAssistantMessages.length > 0) {
                 const lastEl = allAssistantMessages[allAssistantMessages.length - 1];
@@ -983,7 +1087,6 @@
             if (cursor) cursor.remove();
         }
 
-        // ── Suggested Prompts ────────────────
         function bindSuggestedPrompts() {
             const buttons = messagesWrapper.querySelectorAll('.suggested-prompt');
             buttons.forEach(btn => {
@@ -997,7 +1100,6 @@
             });
         }
 
-        // ── Chat History Sidebar ─────────────
         function updateChatHistoryUI() {
             chatHistoryList.innerHTML = '';
             for (const [id, chat] of Object.entries(chatHistories)) {
@@ -1033,21 +1135,19 @@
             return div.innerHTML;
         }
 
-        // ── Model Loading ────────────────────
         async function loadModel() {
             const hasWebGPU = await checkWebGPU();
+            env.useBrowserCache = false;
 
             if (hasWebGPU) {
                 env.backends.onnx.wasm.numThreads = 1;
                 env.allowLocalModels = false;
-                env.useBrowserCache = true;
                 backendBadge.textContent = '⚡ WebGPU';
                 backendBadge.style.color = '#22c55e';
                 console.log('✅ WebGPU is available!');
             } else {
                 env.backends.onnx.wasm.numThreads = Math.max(1, navigator.hardwareConcurrency - 1);
                 env.allowLocalModels = false;
-                env.useBrowserCache = true;
                 backendBadge.textContent = '💻 WASM (CPU)';
                 backendBadge.style.color = '#f59e0b';
                 console.log('⚠️ WebGPU not available, falling back to WASM CPU');
@@ -1089,41 +1189,61 @@
             }
         }
 
-        // ── Send Message ─────────────────────
         async function handleSend() {
             if (isGenerating || !generator) return;
 
             const text = userInput.value.trim();
             if (!text) return;
 
-            // Hide welcome state
             const ws = messagesWrapper.querySelector('.welcome-state');
             if (ws) ws.remove();
 
-            // Add user message
             const chat = chatHistories[currentChatId];
             chat.messages.push({ role: 'user', content: text });
 
-            // Update title if first message
             if (chat.messages.length === 1 && chat.title === 'New Conversation') {
                 chat.title = text.slice(0, 50) + (text.length > 50 ? '…' : '');
                 updateChatHistoryUI();
             }
 
-            // Re-render
-            renderAllMessages();
+            // ── 1. Check redirect ───────────────
+            const redirect = findRedirect(text);
+            if (redirect) {
+                const responseMsg = `🔗 Opening the **${redirect.label}** for you in a new tab.`;
+                chat.messages.push({ role: 'assistant', content: responseMsg });
+                renderAllMessages();
+                window.open(redirect.url, '_blank');
+                userInput.value = '';
+                userInput.style.height = 'auto';
+                sendBtn.disabled = true;
+                updateChatHistoryUI();
+                userInput.focus();
+                return;
+            }
 
-            // Clear input
+            // ── 2. Check math question ──────────
+            const mathAnswer = handleMathQuestion(text);
+            if (mathAnswer) {
+                chat.messages.push({ role: 'assistant', content: mathAnswer });
+                renderAllMessages();
+                userInput.value = '';
+                userInput.style.height = 'auto';
+                sendBtn.disabled = true;
+                updateChatHistoryUI();
+                userInput.focus();
+                return;
+            }
+
+            // ── 3. Normal AI generation ─────────
+            renderAllMessages();
             userInput.value = '';
             userInput.style.height = 'auto';
             sendBtn.disabled = true;
             isGenerating = true;
 
-            // Add empty assistant message
             chat.messages.push({ role: 'assistant', content: '' });
             renderAllMessages();
 
-            // Build prompt
             const prompt = buildPrompt(chat.messages);
 
             try {
@@ -1136,11 +1256,9 @@
                     repetition_penalty: 1.1,
                     do_sample: true,
                     callback_function: (outputs) => {
-                        // outputs is an array of beam objects
                         const generatedText = generator.tokenizer.decode(outputs[0].output_token_ids, {
                             skip_special_tokens: true,
                         });
-                        // Extract only the new part (after the prompt)
                         const promptDecoded = generator.tokenizer.decode(
                             generator.tokenizer.encode(prompt), { skip_special_tokens: true }
                         );
@@ -1148,7 +1266,6 @@
                         if (generatedText.startsWith(promptDecoded)) {
                             newText = generatedText.slice(promptDecoded.length);
                         }
-                        // Clean up
                         newText = cleanResponse(newText);
                         if (newText !== fullResponse) {
                             fullResponse = newText;
@@ -1157,7 +1274,6 @@
                     },
                 });
 
-                // Finalize
                 let finalText = '';
                 if (Array.isArray(result) && result.length > 0) {
                     const generatedText = result[0].generated_text || '';
@@ -1190,8 +1306,7 @@
         }
 
         function buildPrompt(messages) {
-            // Format conversation for the model
-            const conversationMessages = messages.slice(0, -1); // exclude the empty assistant placeholder
+            const conversationMessages = messages.slice(0, -1);
             let prompt = '';
             for (const msg of conversationMessages) {
                 if (msg.role === 'user') {
@@ -1205,14 +1320,11 @@
         }
 
         function cleanResponse(text) {
-            // Remove any trailing "User:" or incomplete segments
             let cleaned = text.replace(/User:.*$/s, '').trim();
-            // Remove trailing incomplete sentences
             cleaned = cleaned.replace(/\n\s*$/, '');
             return cleaned;
         }
 
-        // ── Event Listeners ──────────────────
         sendBtn.addEventListener('click', handleSend);
 
         userInput.addEventListener('keydown', (e) => {
@@ -1225,7 +1337,6 @@
         });
 
         userInput.addEventListener('input', () => {
-            // Auto-resize
             userInput.style.height = 'auto';
             userInput.style.height = Math.min(userInput.scrollHeight, 160) + 'px';
             sendBtn.disabled = !userInput.value.trim() || isGenerating;
@@ -1252,7 +1363,6 @@
             }
         });
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768 &&
                 !sidebar.contains(e.target) &&
@@ -1263,7 +1373,6 @@
             }
         });
 
-        // Keyboard shortcut: Ctrl+K for new chat
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
@@ -1271,16 +1380,11 @@
             }
         });
 
-        // ── Initialize ───────────────────────
         async function init() {
             updateChatHistoryUI();
             renderAllMessages();
             userInput.focus();
-
-            // Load model
             await loadModel();
-
-            // Focus input after model loads
             setTimeout(() => {
                 userInput.focus();
             }, 800);
@@ -1288,10 +1392,9 @@
 
         init().catch(console.error);
 
-        console.log('🚀 Local AI Chat initialized');
+        console.log('🚀 Local AI Chat initialized (redirects + math solver)');
         console.log('   Model:', MODEL_NAME);
         console.log('   Press Ctrl+K for new chat');
-        console.log('   WebGPU:', typeof navigator.gpu !== 'undefined' ? 'Supported ✅' : 'Not supported ⚠️');
     </script>
 </body>
 </html>
